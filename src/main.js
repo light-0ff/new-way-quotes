@@ -1,7 +1,7 @@
 import App from "./App.svelte";
 import { setOptionsToStore } from "./services/store.services";
 
-const getApp = ({ elementId, widgetName }) => {
+const getApp = ({ elementId, widgetName, widgetOptions }) => {
   if (!elementId) {
     console.warn("Element id is not specified");
   }
@@ -13,10 +13,12 @@ const getApp = ({ elementId, widgetName }) => {
     target: document.getElementById(elementId),
     props: {
       widgetName,
+      widgetOptions,
     },
   });
 };
 
+console.log(">>> getApp initialized");
 window.getApp = getApp;
 
 window.setWidgetOptions = setOptionsToStore;

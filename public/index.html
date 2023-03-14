@@ -59,15 +59,16 @@
   <script src="/build/bundle.js"></script>
   <script>
     const setWidgetOptions = window.setWidgetOptions;
-    const widgetOption = {
+    const widgetOptions = {
       pair: 'ethereum/bitcoin',
     }
 
-    if (getApp) {
-      getApp({ elementId: "chart-widget", widgetName: "chart-widget" });
+    if (window.getApp) {
+      window.getApp({ elementId: "chart-widget", widgetName: "chart-widget", widgetOptions });
+    } else {
+      console.warn('getApp is not defined', window.getApp);
     }
 
-
-    setWidgetOptions({widgetOption});
+    setWidgetOptions({widgetOptions});
   </script>
 </html>

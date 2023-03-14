@@ -1,5 +1,5 @@
-import {updateOptions} from "../store";
+import { updateOptions } from "../store";
 
 export const setOptionsToStore = (options) => {
-    updateOptions(options);
+  updateOptions(options);
 };
