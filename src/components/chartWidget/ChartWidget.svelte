@@ -1,29 +1,70 @@
+<style>
+    .chart-widget{
+        width: 100vh;
+    }
+</style>
+
 <script>
-    import {onMount} from "svelte";
+    import uPlot from "uplot";
+    import {onMount, afterUpdate} from "svelte";
     import {mainStore} from "../../store";
     import {getChartData} from "./getChartData";
+    import {getCandleChartOptions} from "./chart-configs";
     import {widgetNames} from "../../constatns/widgetNames";
+    import ChartWidgetWrapper from "./ChartWidgetWrapper.svelte";
+    import {convertApiResponseToChartData, getMinMaxData} from "./chart-utils";
     import './chartWidget.css';
+    import 'uplot/dist/uPlot.min.css';
 
     export let widgetOptions;
+    export let chartElement;
 
     const chartOptions = {};
-
+    let chart;
     let {
-       chartData,
+        chartData,
+        chartDataLoading,
+        chartDataError,
     } = {};
 
     onMount(() => {
+        console.log('>>>widgetOptions', widgetOptions);
        getChartData(chartOptions)
     });
 
+
+
     mainStore.subscribe((store) => {
         chartData = store[widgetNames.CHART_WIDGET].data;
-        console.log('>>>chartData', store[widgetNames.CHART_WIDGET]);
+        chartDataLoading = store[widgetNames.CHART_WIDGET].loading;
+        chartDataError = store[widgetNames.CHART_WIDGET].error;
+    });
+
+
+    const renderChart = () =>{
+        if(!chartElement) return;
+         const serializedChartData = convertApiResponseToChartData(chartData);
+        const {min, max} = getMinMaxData(serializedChartData)
+        const options = getCandleChartOptions({min,  max, chartConfigs: {height: 300, length: 600}});
+        console.log('>>> options', options);
+        console.log('>>>formalizedChartData', serializedChartData);
+        chart = new uPlot(options, serializedChartData, chartElement);
+    }
+
+    afterUpdate(async () => {
+        await renderChart();
     });
 
 </script>
 
-<div>
-    <h3>Chart widget5</h3>
+<div class="chart-widget">
+    <h3>Chart widget</h3>
+    <ChartWidgetWrapper chartDataLoading={chartDataLoading} chartDataError={chartDataError}>
+        <div>Period buttons</div>
+        <div>Chart type buttons</div>
+
+        <div bind:this={chartElement} class="chart-widget" id={'chart-widget'}></div>
+    </ChartWidgetWrapper>
+
 </div>
+

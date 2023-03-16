@@ -6,12 +6,12 @@ body {
 }
 
 body {
-	color: #fff;
+	color: #000;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: 'Ubuntu Mono', monospace;
-	background-color: black;
+	background-color: #fcfcfc;
 	height: auto;
 }
 
@@ -100,6 +100,7 @@ main {
 .card-text {
 	font-size: 18px;
 }
+
 
 @media (min-width:320px) {
 	.flex-grid {

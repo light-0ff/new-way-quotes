@@ -23,7 +23,9 @@ export default {
   plugins: [
     svelte({
       // enable run-time checks when not in production
-      dev: !production,
+      compilerOptions: {
+        dev: !production,
+      },
       // we'll extract any component CSS out into
       // a separate file - better for performance
       emitCss: true,
@@ -38,7 +40,9 @@ export default {
       browser: true,
       dedupe: ["svelte"],
     }),
-    commonjs(),
+    commonjs({
+      transformMixedEsModules: true,
+    }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
