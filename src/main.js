@@ -18,7 +18,6 @@ const getApp = ({ elementId, widgetName, widgetOptions }) => {
   });
 };
 
-console.log(">>> getApp initialized");
 window.getApp = getApp;
 
 window.setWidgetOptions = setOptionsToStore;

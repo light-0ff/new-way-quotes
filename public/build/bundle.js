@@ -6382,6 +6382,16 @@
       ],
       timestamp: 1533581190540,
     };
+
+    const mockData1 = [
+      [1546300800, 1546387200, 1546473600],
+      [1284.7, 1319.9, 1318.7],
+      [1284.75, 1320.6, 1327],
+      [1282.85, 1315, 1318.7],
+      [1283.35, 1315.3, 1326.1],
+      [324, 231, 233],
+    ];
+
     const getChartData = async (chartOptions) => {
       updateChartWidget({ loading: true });
       try {
@@ -6411,14 +6421,13 @@
     };
 
     const getMinMaxData = (data) => {
-      // Date, Open, High, Low, Close
+      // Date, Open, High, Low, Close, Volume
       const max = Math.max(...(data[2] || []));
       const min = Math.min(...(data[3] || []));
       return { max, min };
     };
 
     const convertApiResponseToChartData = (response) => {
-      console.log(">>>response", response);
       const date = [];
       const open = [];
       const high = [];
@@ -6440,199 +6449,38 @@
 
     const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), "Etc/UTC");
 
-    const capitalizeFirstLetter = (string) =>
-      string.charAt(0).toUpperCase() + string.slice(1);
+    const xAxesIncrs = [
+      // minute divisors (# of secs)
+      1,
+      5,
+      10,
+      15,
+      30,
+      // hour divisors
+      60,
+      60 * 5,
+      60 * 10,
+      60 * 15,
+      60 * 30,
+      // day divisors
+      3600,
+      // ...
+    ];
 
-    const getDateTranslates = () => {
-      const { jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec } = {
-        jan: "jan",
-        feb: "feb",
-        mar: "mar",
-        apr: "apr",
-        may: "may",
-        jun: "jun",
-        jul: "jul",
-        aug: "aug",
-        sep: "sep",
-        oct: "oct",
-        nov: "nov",
-        dec: "dec",
-      };
-      const MMM = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec].map(
-        (i) => capitalizeFirstLetter(i)
-      );
-      return { MMM, MMMM: [""], WWWW: [""], WWW: [""] };
-    };
+    // [0]:   minimum num secs in found axis split (tick incr)
+    // [1]:   default tick format
+    // [2-7]: rollover tick formats
+    // [8]:   mode: 0: replace [1] -> [2-7], 1: concat [1] + [2-7]
+    // Before add new date format as MMMM / WWWW/ WWW please add translates for these periods to getDateTranslates
 
-    // converts the legend into a simple tooltip
-    function legendAsTooltipPlugin({
-      className,
-      style = { backgroundColor: "rgba(255, 249, 196, 0.92)", color: "black" },
-    } = {}) {
-      let legendEl;
-
-      function init(u, opts) {
-        legendEl = u.root.querySelector(".u-legend");
-
-        legendEl.classList.remove("u-inline");
-        className && legendEl.classList.add(className);
-
-        uPlot.assign(legendEl.style, {
-          textAlign: "left",
-          pointerEvents: "none",
-          display: "none",
-          position: "absolute",
-          left: 0,
-          top: 0,
-          zIndex: 100,
-          boxShadow: "2px 2px 10px rgba(0,0,0,0.5)",
-          ...style,
-        });
-
-        // hide series color markers
-        const idents = legendEl.querySelectorAll(".u-marker");
-
-        for (let i = 0; i < idents.length; i++) idents[i].style.display = "none";
-
-        const overEl = u.over;
-        overEl.style.overflow = "visible";
-
-        // move legend into plot bounds
-        overEl.appendChild(legendEl);
-
-        // show/hide tooltip on enter/exit
-        overEl.addEventListener("mouseenter", () => {
-          legendEl.style.display = null;
-        });
-        overEl.addEventListener("mouseleave", () => {
-          legendEl.style.display = "none";
-        });
-
-        // let tooltip exit plot
-        //	overEl.style.overflow = "visible";
-      }
-
-      function update(u) {
-        const { left, top } = u.cursor;
-        legendEl.style.transform = "translate(" + left + "px, " + top + "px)";
-      }
-
-      return {
-        hooks: {
-          init: init,
-          setCursor: update,
-        },
-      };
-    }
-
-    // draws candlestick symbols (expects data in OHLC order)
-    function candlestickPlugin({
-      gap = 2,
-      shadowColor = "#000000",
-      bearishColor = "#e54245",
-      bullishColor = "#4ab650",
-      bodyMaxWidth = 20,
-      shadowWidth = 2,
-      bodyOutline = 1,
-    } = {}) {
-      function drawCandles(u) {
-        u.ctx.save();
-
-        const offset = (shadowWidth % 2) / 2;
-
-        u.ctx.translate(offset, offset);
-
-        let [iMin, iMax] = u.series[0].idxs;
-
-        let vol0AsY = u.valToPos(0, "vol", true);
-
-        for (let i = iMin; i <= iMax; i++) {
-          let xVal = u.scales.x.distr == 2 ? i : u.data[0][i];
-          let open = u.data[1][i];
-          let high = u.data[2][i];
-          let low = u.data[3][i];
-          let close = u.data[4][i];
-          let vol = u.data[5][i];
-
-          let timeAsX = u.valToPos(xVal, "x", true);
-          let lowAsY = u.valToPos(low, "y", true);
-          let highAsY = u.valToPos(high, "y", true);
-          let openAsY = u.valToPos(open, "y", true);
-          let closeAsY = u.valToPos(close, "y", true);
-          let volAsY = u.valToPos(vol, "vol", true);
-
-          // shadow rect
-          let shadowHeight = Math.max(highAsY, lowAsY) - Math.min(highAsY, lowAsY);
-          let shadowX = timeAsX - shadowWidth / 2;
-          let shadowY = Math.min(highAsY, lowAsY);
-
-          u.ctx.fillStyle = shadowColor;
-          u.ctx.fillRect(
-            Math.round(shadowX),
-            Math.round(shadowY),
-            Math.round(shadowWidth),
-            Math.round(shadowHeight)
-          );
-
-          // body rect
-          let columnWidth = u.bbox.width / (iMax - iMin);
-          let bodyWidth = Math.min(bodyMaxWidth, columnWidth - gap);
-          let bodyHeight =
-            Math.max(closeAsY, openAsY) - Math.min(closeAsY, openAsY);
-          let bodyX = timeAsX - bodyWidth / 2;
-          let bodyY = Math.min(closeAsY, openAsY);
-          let bodyColor = open > close ? bearishColor : bullishColor;
-
-          u.ctx.fillStyle = shadowColor;
-          u.ctx.fillRect(
-            Math.round(bodyX),
-            Math.round(bodyY),
-            Math.round(bodyWidth),
-            Math.round(bodyHeight)
-          );
-
-          u.ctx.fillStyle = bodyColor;
-          u.ctx.fillRect(
-            Math.round(bodyX + bodyOutline),
-            Math.round(bodyY + bodyOutline),
-            Math.round(bodyWidth - bodyOutline * 2),
-            Math.round(bodyHeight - bodyOutline * 2)
-          );
-
-          // volume rect
-          u.ctx.fillRect(
-            Math.round(bodyX),
-            Math.round(volAsY),
-            Math.round(bodyWidth),
-            Math.round(vol0AsY - volAsY)
-          );
-        }
-
-        u.ctx.translate(-offset, -offset);
-
-        u.ctx.restore();
-      }
-
-      return {
-        opts: (u, opts) => {
-          uPlot.assign(opts, {
-            cursor: {
-              points: {
-                show: false,
-              },
-            },
-          });
-
-          opts.series.forEach((series) => {
-            series.paths = () => null;
-            series.points = { show: false };
-          });
-        },
-        hooks: {
-          draw: drawCandles,
-        },
-      };
-    }
+    const xAxesValues = [
+      // tick incr        default        year               month    day            hour     min      sec    mode
+      [3600 * 24 * 365, "{YYYY}", null, null, null, null, null, null, 1],
+      [3600 * 24 * 28, "{MMM}", "\n{YYYY}", null, null, null, null, null, 1],
+      [3600 * 24, "{M}/{D}", "\n{YYYY}", null, null, null, null, null, 1],
+      [3600, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
+      [60, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
+    ];
 
     const defaultCandleChartConfig = {
       width: 0,
@@ -6660,18 +6508,6 @@
       min = fixedMinMax.min;
       max = fixedMinMax.max;
 
-      const plugins = [
-        legendAsTooltipPlugin(),
-        candlestickPlugin({
-          gap: config.candleGap,
-          bearishColor: config.candleBearishColor,
-          bullishColor: config.candleBullishColor,
-          bodyMaxWidth: config.candleMaxWidth,
-          shadowWidth: config.candleShadowWidth,
-          bodyOutline: config.candleOutline,
-        }),
-      ];
-
       // if (config.isResizable) {
       //   plugins.push(resize({ heightToWidthRatio: config.heightToWidthRatio }));
       // }
@@ -6680,12 +6516,13 @@
         width: config.width,
         height: config.height,
         tzDate,
-        fmtDate: (tpl) => (date) => {
-          return !isNaN(date.getTime())
-            ? uPlot.fmtDate(tpl, getDateTranslates())(date)
-            : "";
-        },
-        plugins,
+        // fmtDate: (tpl) => (date) => {
+        //   console.log(">>>", date);
+        //   return !isNaN(date.getTime())
+        //     ? uPlot.fmtDate(tpl, getDateTranslates())(date)
+        //     : "";
+        // },
+        // plugins,
         scales: {
           x: { distr: 2 },
           y: { min, max },
@@ -6693,14 +6530,13 @@
         series: [
           {
             label: "Date",
-            value: (u, ts) =>
-              console.log("Date", ts) ||
-              uPlot.fmtDate(config.tooltipDateFormat)(tzDate(ts)),
+            value: (u, ts) => console.log("Date", ts) || "",
+            // uPlot.fmtDate(config.tooltipDateFormat)(tzDate(ts)),
           },
           {
             label: "Open",
             value: (u, value) =>
-              console.log("Open", value) ||
+              console.log("Open", value, u) ||
               value.toFixed(config.tooltipDecimalsInFloat),
           },
           {
@@ -6715,22 +6551,26 @@
             label: "Close",
             value: (u, value) => value.toFixed(config.tooltipDecimalsInFloat),
           },
+          {
+            label: "Volume",
+            value: (u, value) => value.toFixed(config.tooltipDecimalsInFloat),
+          },
         ],
         axes: [
           {
             size: config.xAxisSize,
             font: config.xAxisFont,
-            // incrs: xAxesIncrs,
-            // values: xAxesValues,
+            incrs: xAxesIncrs,
+            values: xAxesValues,
           },
           {
             side: 1,
             size: config.yAxisSize,
             font: config.yAxisFont,
-            // values: (self, ticks) =>
-            //   ticks.map((rawValue) =>
-            //     rawValue.toFixed(config.yAxisDecimalsInFloat)
-            //   ),
+            values: (self, ticks) =>
+              ticks.map((rawValue) =>
+                rawValue.toFixed(config.yAxisDecimalsInFloat)
+              ),
           },
         ],
       };
@@ -7051,7 +6891,7 @@
     const { console: console_1 } = globals;
     const file = "src/components/chartWidget/ChartWidget.svelte";
 
-    // (62:4) <ChartWidgetWrapper chartDataLoading={chartDataLoading} chartDataError={chartDataError}>
+    // (63:4) <ChartWidgetWrapper chartDataLoading={chartDataLoading} chartDataError={chartDataError}>
     function create_default_slot(ctx) {
     	let div0;
     	let t1;
@@ -7068,11 +6908,11 @@
     			div1.textContent = "Chart type buttons";
     			t3 = space();
     			div2 = element("div");
-    			add_location(div0, file, 62, 8, 1870);
-    			add_location(div1, file, 63, 8, 1904);
+    			add_location(div0, file, 63, 8, 1892);
+    			add_location(div1, file, 64, 8, 1926);
     			attr_dev(div2, "class", "chart-widget svelte-4zegu");
     			attr_dev(div2, "id", 'chart-widget');
-    			add_location(div2, file, 65, 8, 1943);
+    			add_location(div2, file, 66, 8, 1965);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -7097,7 +6937,7 @@
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(62:4) <ChartWidgetWrapper chartDataLoading={chartDataLoading} chartDataError={chartDataError}>",
+    		source: "(63:4) <ChartWidgetWrapper chartDataLoading={chartDataLoading} chartDataError={chartDataError}>",
     		ctx
     	});
 
@@ -7128,9 +6968,9 @@
     			h3.textContent = "Chart widget";
     			t1 = space();
     			create_component(chartwidgetwrapper.$$.fragment);
-    			add_location(h3, file, 60, 4, 1747);
+    			add_location(h3, file, 61, 4, 1769);
     			attr_dev(div, "class", "chart-widget svelte-4zegu");
-    			add_location(div, file, 59, 0, 1716);
+    			add_location(div, file, 60, 0, 1738);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -7201,18 +7041,19 @@
 
     	const renderChart = () => {
     		if (!chartElement) return;
-    		const serializedChartData = convertApiResponseToChartData(chartData);
-    		const { min, max } = getMinMaxData(serializedChartData);
+
+    		// const serializedChartData = convertApiResponseToChartData(chartData.slice(1,4));
+    		const { min, max } = getMinMaxData(mockData1);
 
     		const options = getCandleChartOptions({
     			min,
     			max,
-    			chartConfigs: { height: 300, length: 600 }
+    			chartConfigs: { height: 300, width: 600 }
     		});
 
     		console.log('>>> options', options);
-    		console.log('>>>formalizedChartData', serializedChartData);
-    		chart = new uPlot(options, serializedChartData, chartElement);
+    		console.log('>>>formalizedChartData', mockData1);
+    		chart = new uPlot(options, mockData1, chartElement);
     	};
 
     	afterUpdate(async () => {
@@ -7258,6 +7099,7 @@
     		ChartWidgetWrapper,
     		convertApiResponseToChartData,
     		getMinMaxData,
+    		mockData1,
     		widgetOptions,
     		chartElement,
     		chartOptions,
@@ -7529,7 +7371,6 @@
       });
     };
 
-    console.log(">>> getApp initialized");
     window.getApp = getApp;
 
     window.setWidgetOptions = setOptionsToStore;

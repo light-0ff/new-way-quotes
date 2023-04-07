@@ -13,14 +13,13 @@ const fixEqualMinMax = ({ min, max }) => {
 };
 
 const getMinMaxData = (data) => {
-  // Date, Open, High, Low, Close
+  // Date, Open, High, Low, Close, Volume
   const max = Math.max(...(data[2] || []));
   const min = Math.min(...(data[3] || []));
   return { max, min };
 };
 
 const convertApiResponseToChartData = (response) => {
-  console.log(">>>response", response);
   const date = [];
   const open = [];
   const high = [];

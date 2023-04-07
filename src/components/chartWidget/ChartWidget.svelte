@@ -15,6 +15,7 @@
     import {convertApiResponseToChartData, getMinMaxData} from "./chart-utils";
     import './chartWidget.css';
     import 'uplot/dist/uPlot.min.css';
+    import {mockData1} from "./mocks";
 
     export let widgetOptions;
     export let chartElement;
@@ -43,12 +44,12 @@
 
     const renderChart = () =>{
         if(!chartElement) return;
-         const serializedChartData = convertApiResponseToChartData(chartData);
-        const {min, max} = getMinMaxData(serializedChartData)
-        const options = getCandleChartOptions({min,  max, chartConfigs: {height: 300, length: 600}});
+        // const serializedChartData = convertApiResponseToChartData(chartData.slice(1,4));
+        const {min, max} = getMinMaxData(mockData1)
+        const options = getCandleChartOptions({min,  max, chartConfigs: {height: 300, width : 600}});
         console.log('>>> options', options);
-        console.log('>>>formalizedChartData', serializedChartData);
-        chart = new uPlot(options, serializedChartData, chartElement);
+        console.log('>>>formalizedChartData', mockData1);
+        chart = new uPlot(options, mockData1, chartElement);
     }
 
     afterUpdate(async () => {

@@ -1,6 +1,7 @@
 import uPlot from "uplot";
 import { fixEqualMinMax, tzDate, getDateTranslates } from "./chart-utils";
 import { candlestickPlugin, legendAsTooltipPlugin } from "./chart-plugins";
+import { xAxesIncrs, xAxesValues } from "./chart-constants";
 
 const defaultCandleChartConfig = {
   width: 0,
@@ -48,12 +49,13 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
     width: config.width,
     height: config.height,
     tzDate,
-    fmtDate: (tpl) => (date) => {
-      return !isNaN(date.getTime())
-        ? uPlot.fmtDate(tpl, getDateTranslates())(date)
-        : "";
-    },
-    plugins,
+    // fmtDate: (tpl) => (date) => {
+    //   console.log(">>>", date);
+    //   return !isNaN(date.getTime())
+    //     ? uPlot.fmtDate(tpl, getDateTranslates())(date)
+    //     : "";
+    // },
+    // plugins,
     scales: {
       x: { distr: 2 },
       y: { min, max },
@@ -61,14 +63,13 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
     series: [
       {
         label: "Date",
-        value: (u, ts) =>
-          console.log("Date", ts) ||
-          uPlot.fmtDate(config.tooltipDateFormat)(tzDate(ts)),
+        value: (u, ts) => console.log("Date", ts) || "",
+        // uPlot.fmtDate(config.tooltipDateFormat)(tzDate(ts)),
       },
       {
         label: "Open",
         value: (u, value) =>
-          console.log("Open", value) ||
+          console.log("Open", value, u) ||
           value.toFixed(config.tooltipDecimalsInFloat),
       },
       {
@@ -83,25 +84,27 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
         label: "Close",
         value: (u, value) => value.toFixed(config.tooltipDecimalsInFloat),
       },
+      {
+        label: "Volume",
+        value: (u, value) => value.toFixed(config.tooltipDecimalsInFloat),
+      },
     ],
     axes: [
       {
         size: config.xAxisSize,
         font: config.xAxisFont,
-        // incrs: xAxesIncrs,
-        // values: xAxesValues,
+        incrs: xAxesIncrs,
+        values: xAxesValues,
       },
       {
         side: 1,
         size: config.yAxisSize,
         font: config.yAxisFont,
-        // values: (self, ticks) =>
-        //   ticks.map((rawValue) =>
-        //     rawValue.toFixed(config.yAxisDecimalsInFloat)
-        //   ),
+        values: (self, ticks) =>
+          ticks.map((rawValue) =>
+            rawValue.toFixed(config.yAxisDecimalsInFloat)
+          ),
       },
     ],
   };
 };
-
-export {};
