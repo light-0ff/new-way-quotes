@@ -1,6 +1,6 @@
 import uPlot from "uplot";
 import { fixEqualMinMax, tzDate, getDateTranslates } from "./chart-utils";
-import { candlestickPlugin, legendAsTooltipPlugin } from "./chart-plugins";
+import { candlestickPlugin, legendAsTooltipPlugin, columnHighlightPlugin } from "./chart-plugins";
 import { xAxesIncrs, xAxesValues } from "./chart-constants";
 
 const defaultCandleChartConfig = {
@@ -30,6 +30,7 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
   max = fixedMinMax.max;
 
   const plugins = [
+    columnHighlightPlugin(),
     legendAsTooltipPlugin(),
     candlestickPlugin({
       gap: config.candleGap,
@@ -55,7 +56,7 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
     //     ? uPlot.fmtDate(tpl, getDateTranslates())(date)
     //     : "";
     // },
-    // plugins,
+    plugins: plugins,
     scales: {
       x: { distr: 2 },
       y: { min, max },
@@ -86,7 +87,7 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
       },
       {
         label: "Volume",
-        value: (u, value) => value.toFixed(config.tooltipDecimalsInFloat),
+        scale: 'vol',
       },
     ],
     axes: [
