@@ -1,10 +1,9 @@
-## demo https://widget.anoram.com/
+## Quotes widget
 
-Clone ``npm install`` 
+Clone `npm install`
 
-You need to run both ``npm run dev`` for svelte app.
+You need to run both `npm run dev` for svelte app.
 
+This project uses this [Gemini API](https://api.gemini.com/v1/pricefeed)
 
-This project uses this [Gemini API](https://api.gemini.com/v1/pricefeed) 
-
-Read the article here 
+Read the article here
