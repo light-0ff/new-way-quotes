@@ -1,6 +1,10 @@
 import uPlot from "uplot";
 import { fixEqualMinMax, tzDate, getDateTranslates } from "./chart-utils";
-import { candlestickPlugin, legendAsTooltipPlugin, columnHighlightPlugin } from "./chart-plugins";
+import {
+  candlestickPlugin,
+  legendAsTooltipPlugin,
+  columnHighlightPlugin,
+} from "./chart-plugins";
 import { xAxesIncrs, xAxesValues } from "./chart-constants";
 
 const defaultCandleChartConfig = {
@@ -87,7 +91,7 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
       },
       {
         label: "Volume",
-        scale: 'vol',
+        scale: "vol",
       },
     ],
     axes: [

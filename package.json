@@ -2,7 +2,7 @@
   "name": "quotes-widget",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c --bundleConfigAsCjs",
     "dev": "rollup -c -w --bundleConfigAsCjs",
     "start": "sirv public",
     "prettier-svelte": "prettier src/**/*.svelte"

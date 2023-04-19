@@ -1,3 +1,3 @@
 export const widgetNames = {
-    CHART_WIDGET: 'chart-widget',
-}
+  CHART_WIDGET: "chart-widget",
+};

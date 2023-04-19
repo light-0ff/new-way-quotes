@@ -4,31 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-    <title>Crypto 🤑 Svelte Widget</title>
+    <title>Quotes widget</title>
 
-    <meta property="og:description" content="Minimal Crypto Price Widget" />
-    <meta property="og:title" content="Crypto price widget made with Svelte" />
-    <meta property="og:url" content="https://widget.anoram.com/" />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://widget.anoram.com/socialshare.jpg"
-    />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:creator" content="@shriji" />
-    <meta name="twitter:url" content="https://widget.anoram.com/" />
-    <meta name="twitter:title" content="Minimal Crypto Price Widget" />
-    <meta
-      name="twitter:description"
-      content="Crypto price widget made with Svelte"
-    />
-    <meta
-      name="twitter:image"
-      content="https://widget.anoram.com/twshare.jpg"
-    />
-
-    <meta name="Description" content="Crypto price widget made with Svelte" />
+    <meta name="Description" content="Quotes widget made with Svelte" />
     <link rel="icon" type="image/png" href="./favicon.png" />
 
     <link
@@ -52,23 +31,26 @@
   </head>
 
   <body>
-  <div id="chart-widget"></div>
-
+    <div id="chart-widget"></div>
   </body>
   <script src="/build/bundle.js"></script>
   <script>
     const setWidgetOptions = window.setWidgetOptions;
 
     const widgetOptions = {
-      pair: 'ethereum/bitcoin',
-    }
+      pair: "ethereum/bitcoin",
+    };
 
     if (window.getApp) {
-      window.getApp({ elementId: "chart-widget", widgetName: "chart-widget", widgetOptions });
+      window.getApp({
+        elementId: "chart-widget",
+        widgetName: "chart-widget",
+        widgetOptions,
+      });
     } else {
-      console.warn('getApp is not defined', window.getApp);
+      console.warn("getApp is not defined", window.getApp);
     }
 
-    setWidgetOptions({widgetOptions});
+    setWidgetOptions({ widgetOptions });
   </script>
 </html>
