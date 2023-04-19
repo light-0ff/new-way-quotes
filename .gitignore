@@ -2,4 +2,5 @@
 .idea
 *.iml
 /public/build
-
+.DS_Store
+/export/
