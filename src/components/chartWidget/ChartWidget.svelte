@@ -37,13 +37,11 @@
 
   const renderChart = async () => {
     if (!chartElement) return;
-    console.log("draw");
     const responce = await axios
       .get(
         `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1${interval}&startTime=1677695844000&limit=${limit}`
       )
       .then((res) => {
-        console.log("data before ", res.data);
         let buffer = [[], [], [], [], [], []];
         res.data.forEach((element) => {
           buffer[0].push(element[0]);
@@ -74,7 +72,7 @@
   <h3>Chart widget</h3>
   <!-- <ChartWidgetWrapper {chartDataLoading} {chartDataError}> -->
   <div>Period buttons</div>
-  <ChartWidgetDateButtons {interval} handleClick={renderChart} />
+  <ChartWidgetDateButtons bind:interval />
   <div>Chart type buttons</div>
   {#key interval}
     <div bind:this={chartElement} class="chart-widget" id={"chart-widget"} />
