@@ -30,3 +30,9 @@ export const xAxesValues = [
   [3600, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
   [60, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
 ];
+
+export const defaultChartOptions = {
+  symbol: "BTC",
+  interval: "1d",
+  limit: "100",
+};
