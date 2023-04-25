@@ -22,7 +22,7 @@
   let chart;
   let { chartData, chartDataLoading, chartDataError } = {};
   let symbol = "BTC";
-  let interval = "d";
+  let interval = "1d";
   let limit = "100";
 
   onMount(() => {
@@ -37,21 +37,13 @@
 
   const renderChart = async () => {
     if (!chartElement) return;
+    console.log(interval)
     const responce = await axios
       .get(
-        `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1${interval}&startTime=1677695844000&limit=${limit}`
+        `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=${interval}&startTime=1677695844000&limit=${limit}`
       )
       .then((res) => {
-        let buffer = [[], [], [], [], [], []];
-        res.data.forEach((element) => {
-          buffer[0].push(element[0]);
-          buffer[1].push(Number(element[1]));
-          buffer[2].push(Number(element[2]));
-          buffer[3].push(Number(element[3]));
-          buffer[4].push(Number(element[4]));
-          buffer[5].push(Number(element[5]));
-        });
-        return buffer;
+        return normalizeApiResponse(res);
       });
     // const serializedChartData = convertApiResponseToChartData(chartData.slice(1,4));
     const { min, max } = getMinMaxData(responce);
