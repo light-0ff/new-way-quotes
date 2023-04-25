@@ -1,5 +1,5 @@
 import uPlot from "uplot";
-import { fixEqualMinMax, tzDate, getDateTranslates } from "./chart-utils";
+import { fixEqualMinMax, tzDate, fmtDate, getDateTranslates } from "./chart-utils";
 import {
   candlestickPlugin,
   legendAsTooltipPlugin,
@@ -68,7 +68,7 @@ export const getCandleChartOptions = ({ min, max, chartConfigs }) => {
     series: [
       {
         label: "Date",
-        value: (u, ts) => console.log("Date", ts) || "",
+        value: (u, ts) => console.log("Date", ts) || fmtDate(tzDate(ts)),
         // uPlot.fmtDate(config.tooltipDateFormat)(tzDate(ts)),
       },
       {

@@ -24,6 +24,7 @@
   let symbol = "BTC";
   let interval = "1d";
   let limit = "100";
+  let startTime = new Date().getTime(); // add to http api response
 
   onMount(() => {
     console.log(">>>widgetOptions", widgetOptions);
@@ -37,10 +38,9 @@
 
   const renderChart = async () => {
     if (!chartElement) return;
-    console.log(interval)
     const responce = await axios
       .get(
-        `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=${interval}&startTime=1677695844000&limit=${limit}`
+        `https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=${interval}&startTime=${1677695844000}&limit=${limit}`
       )
       .then((res) => {
         return normalizeApiResponse(res);

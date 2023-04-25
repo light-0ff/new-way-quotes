@@ -39,7 +39,8 @@ const convertApiResponseToChartData = (response) => {
   return [date, open, high, low, close, volume];
 };
 
-const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), "Etc/UTC");
+const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}");
+const tzDate = (ts) => uPlot.tzDate(new Date(ts), "Etc/UTC");
 
 const capitalizeFirstLetter = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -85,6 +86,7 @@ const normalizeApiResponse = (response) => {
 };
 
 export {
+  fmtDate,
   tzDate,
   getMinMaxData,
   fixEqualMinMax,
