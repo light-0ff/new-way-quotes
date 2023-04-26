@@ -1,15 +1,19 @@
 <script>
-  export let interval;
+  export let period;
 </script>
 
+
+<!--TODO: Create periods object ex: {name: 'day', interval: '1h'}-->
 <!--TODO: refactor using https://svelte.dev/docs#template-syntax-each -->
-<!--TODO: Add year button -->
+<!--TODO: Add year period -->
 
-<button class:selected={interval === "1d"} on:click={() => (interval = "1d")}>Day</button>
 
-<button class:selected={interval === "1w"} on:click={() => (interval = "1w")}>Week</button>
 
-<button class:selected={interval === "1m"} on:click={() => (interval = "1m")}>Month</button>
+<button class:selected={period === "d"} on:click={() => (period = "d")}>Day</button>
+
+<button class:selected={period === "w"} on:click={() => (period = "w")}>Week</button>
+
+<button class:selected={period === "m"} on:click={() => (period = "m")}>Month</button>
 
 <style>
   .selected {

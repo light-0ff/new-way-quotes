@@ -21,10 +21,10 @@
   let chartElement;
   let chart;
   let { chartData, chartDataLoading, chartDataError } = {};
-  let { interval } = chartOptions;
+  let period = 'day';
 
   $:{
-    getChartData({...chartOptions, interval});
+    getChartData({...chartOptions, period});
   }
 
   mainStore.subscribe((store) => {
@@ -54,9 +54,9 @@
 
 <div class="chart-widget">
   <h3>Chart widget</h3>
-   <ChartWidgetDateButtons bind:interval />
+   <ChartWidgetDateButtons bind:period />
   <ChartWidgetWrapper {chartDataLoading} {chartDataError}>
-    {#key interval}
+    {#key period}
       <div bind:this={chartElement} class="chart-widget" id="chart-widget"></div>
     {/key}
    </ChartWidgetWrapper>
