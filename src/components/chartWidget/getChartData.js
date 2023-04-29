@@ -4,8 +4,6 @@ import { normalizeApiResponse } from "./chart-utils";
 import { periodOptions } from "./chart-constants";
 
 const getOptionToServer = ({ period }) => {
-  // TODO: Add logic to calculate startTime due to endTime and period
-  // for different periods interval should be different, day: 1h (24 candlesticks), week:6h (28), month: 1d (30), year: 1w(52)
   let ago = new Date();
   let startTime;
   let endTime = ago.getTime();
@@ -19,7 +17,7 @@ const getOptionToServer = ({ period }) => {
     case periodOptions[1].id:
       ago.setDate(ago.getDate() - 7);
       startTime = ago.getTime();
-      interval = "1h";
+      interval = "6h";
       break;
     case periodOptions[2].id:
       ago.setDate(ago.getDate() - 30);
@@ -29,7 +27,7 @@ const getOptionToServer = ({ period }) => {
     case periodOptions[3].id:
       ago.setDate(ago.getDate() - 365);
       startTime = ago.getTime();
-      interval = "1m";
+      interval = "1w";
       break;
     default:
       startTime = 1681765200000;
