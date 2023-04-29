@@ -5,14 +5,12 @@
   import { getCandleChartOptions } from "./chart-configs";
   import { widgetNames } from "../../constatns/widgetNames";
   import ChartWidgetWrapper from "./ChartWidgetWrapper.svelte";
-  import {
-    getMinMaxData,
-  } from "./chart-utils";
+  import { getMinMaxData } from "./chart-utils";
   import ChartWidgetDateButtons from "./ChartWidgetDateButtons.svelte";
   import "./chartWidget.css";
   import "uplot/dist/uPlot.min.css";
   import { getChartData } from "./getChartData";
-  import { defaultChartOptions } from "./chart-constants";
+  import { defaultChartOptions, periodOptions } from "./chart-constants";
 
   export let widgetOptions;
 
@@ -21,7 +19,7 @@
   let chartElement;
   let chart;
   let { chartData, chartDataLoading, chartDataError } = {};
-  let period = 'day';
+  let period = periodOptions[0].id;
 
   $:{
     getChartData({...chartOptions, period});
@@ -54,12 +52,12 @@
 
 <div class="chart-widget">
   <h3>Chart widget</h3>
-   <ChartWidgetDateButtons bind:period />
+  <ChartWidgetDateButtons bind:period />
   <ChartWidgetWrapper {chartDataLoading} {chartDataError}>
     {#key period}
-      <div bind:this={chartElement} class="chart-widget" id="chart-widget"></div>
+      <div bind:this={chartElement} class="chart-widget" id="chart-widget" />
     {/key}
-   </ChartWidgetWrapper>
+  </ChartWidgetWrapper>
 </div>
 
 <style>

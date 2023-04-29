@@ -1,19 +1,15 @@
 <script>
   export let period;
+  import { periodOptions } from "./chart-constants";
 </script>
-
 
 <!--TODO: Create periods object ex: {name: 'day', interval: '1h'}-->
 <!--TODO: refactor using https://svelte.dev/docs#template-syntax-each -->
 <!--TODO: Add year period -->
 
-
-
-<button class:selected={period === "d"} on:click={() => (period = "d")}>Day</button>
-
-<button class:selected={period === "w"} on:click={() => (period = "w")}>Week</button>
-
-<button class:selected={period === "m"} on:click={() => (period = "m")}>Month</button>
+{#each periodOptions as {id, name}}
+<button class:selected={period === id} on:click={() => (period = id)}>{name}</button>
+{/each}
 
 <style>
   .selected {

@@ -33,6 +33,13 @@ export const xAxesValues = [
 
 export const defaultChartOptions = {
   symbol: "BTC",
-  interval: "1d",
+  interval: "1h",
   limit: "100",
 };
+
+export const periodOptions = [
+  { id: Symbol("day"), name: "Day" },
+  { id: Symbol("week"), name: "Week" },
+  { id: Symbol("month"), name: "Month" },
+  { id: Symbol("year"), name: "Year" },
+];
