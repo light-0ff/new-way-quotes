@@ -12,22 +12,22 @@ const getOptionToServer = ({ period }) => {
     case periodOptions[0].id:
       ago.setDate(ago.getDate() - 1);
       startTime = ago.getTime();
-      interval = "1h";
+      interval = periodOptions[0].interval;
       break;
     case periodOptions[1].id:
       ago.setDate(ago.getDate() - 7);
       startTime = ago.getTime();
-      interval = "6h";
+      interval = periodOptions[1].interval;
       break;
     case periodOptions[2].id:
       ago.setDate(ago.getDate() - 30);
       startTime = ago.getTime();
-      interval = "1d";
+      interval = periodOptions[2].interval;
       break;
     case periodOptions[3].id:
       ago.setDate(ago.getDate() - 365);
       startTime = ago.getTime();
-      interval = "1w";
+      interval = periodOptions[3].interval;
       break;
     default:
       startTime = 1681765200000;
