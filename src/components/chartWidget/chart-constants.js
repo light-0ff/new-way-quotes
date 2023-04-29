@@ -38,7 +38,7 @@ export const defaultChartOptions = {
 
 export const periodOptions = [
   { id: Symbol("day"), name: "Day", interval: "1h" },
-  { id: Symbol("week"), name: "Week", interval: "16" },
+  { id: Symbol("week"), name: "Week", interval: "6h" },
   { id: Symbol("month"), name: "Month", interval: "1d" },
   { id: Symbol("year"), name: "Year", interval: "1w" },
 ];

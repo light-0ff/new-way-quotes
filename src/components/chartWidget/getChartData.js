@@ -9,21 +9,25 @@ const getOptionToServer = ({ period }) => {
   let endTime = ago.getTime();
   let interval;
   switch (period) {
+    // Day
     case periodOptions[0].id:
       ago.setDate(ago.getDate() - 1);
       startTime = ago.getTime();
       interval = periodOptions[0].interval;
       break;
+    // Week
     case periodOptions[1].id:
       ago.setDate(ago.getDate() - 7);
       startTime = ago.getTime();
       interval = periodOptions[1].interval;
       break;
+    // Month
     case periodOptions[2].id:
       ago.setDate(ago.getDate() - 30);
       startTime = ago.getTime();
       interval = periodOptions[2].interval;
       break;
+    // Year
     case periodOptions[3].id:
       ago.setDate(ago.getDate() - 365);
       startTime = ago.getTime();
