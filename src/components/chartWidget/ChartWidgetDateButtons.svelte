@@ -4,8 +4,6 @@
 </script>
 
 <!--TODO: Create periods object ex: {name: 'day', interval: '1h'}-->
-<!--TODO: refactor using https://svelte.dev/docs#template-syntax-each -->
-<!--TODO: Add year period -->
 
 {#each periodOptions as {id, name}}
 <button class:selected={period === id} on:click={() => (period = id)}>{name}</button>

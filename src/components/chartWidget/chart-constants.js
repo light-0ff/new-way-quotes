@@ -33,7 +33,6 @@ export const xAxesValues = [
 
 export const defaultChartOptions = {
   symbol: "BTC",
-  interval: "1h",
   limit: "100",
 };
 

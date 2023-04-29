@@ -1,18 +1,48 @@
 import axios from "axios";
 import { updateChartWidget } from "../../store";
-import { mockData } from "./mocks";
 import { normalizeApiResponse } from "./chart-utils";
+import { periodOptions } from "./chart-constants";
 
 const getOptionToServer = ({ period }) => {
   // TODO: Add logic to calculate startTime due to endTime and period
   // for different periods interval should be different, day: 1h (24 candlesticks), week:6h (28), month: 1d (30), year: 1w(52)
-  return { startTime: 1681765200000, endTime: new Date().getTime() };
+  let ago = new Date();
+  let startTime;
+  let endTime = ago.getTime();
+  let interval;
+  switch (period) {
+    case periodOptions[0].id:
+      ago.setDate(ago.getDate() - 1);
+      startTime = ago.getTime();
+      interval = "1h";
+      break;
+    case periodOptions[1].id:
+      ago.setDate(ago.getDate() - 7);
+      startTime = ago.getTime();
+      interval = "1h";
+      break;
+    case periodOptions[2].id:
+      ago.setDate(ago.getDate() - 30);
+      startTime = ago.getTime();
+      interval = "1d";
+      break;
+    case periodOptions[3].id:
+      ago.setDate(ago.getDate() - 365);
+      startTime = ago.getTime();
+      interval = "1m";
+      break;
+    default:
+      startTime = 1681765200000;
+      interval = "1h";
+      break;
+  }
+  return { startTime: startTime, endTime: endTime, interval };
 };
-export const getChartData = async ({ symbol, interval, limit, period }) => {
+export const getChartData = async ({ symbol, limit, period }) => {
   updateChartWidget({ loading: true });
 
-  const { startTime, endTime } = getOptionToServer({ period });
-
+  const { startTime, endTime, interval } = getOptionToServer({ period });
+  console.log(startTime, interval, endTime);
   try {
     await axios
       .get(
