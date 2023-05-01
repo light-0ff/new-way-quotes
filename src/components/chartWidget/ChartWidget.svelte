@@ -1,27 +1,29 @@
 <script>
   import uPlot from "uplot";
-  import { onMount, afterUpdate } from "svelte";
+  import { afterUpdate } from "svelte";
   import { mainStore } from "../../store";
-  import { getChartData } from "./getChartData";
   import { getCandleChartOptions } from "./chart-configs";
   import { widgetNames } from "../../constatns/widgetNames";
   import ChartWidgetWrapper from "./ChartWidgetWrapper.svelte";
-  import { convertApiResponseToChartData, getMinMaxData } from "./chart-utils";
+  import { getMinMaxData } from "./chart-utils";
+  import ChartWidgetDateButtons from "./ChartWidgetDateButtons.svelte";
   import "./chartWidget.css";
   import "uplot/dist/uPlot.min.css";
-  import { mockData1 } from "./mocks";
+  import { getChartData } from "./getChartData";
+  import { defaultChartOptions, periodOptions } from "./chart-constants";
 
   export let widgetOptions;
-  export let chartElement;
 
-  const chartOptions = {};
+
+  const chartOptions = {...widgetOptions.chartOptions, ...defaultChartOptions};
+  let chartElement;
   let chart;
   let { chartData, chartDataLoading, chartDataError } = {};
+  let period = periodOptions[0].id;
 
-  onMount(() => {
-    console.log(">>>widgetOptions", widgetOptions);
-    getChartData(chartOptions);
-  });
+  $:{
+    getChartData({...chartOptions, period});
+  }
 
   mainStore.subscribe((store) => {
     chartData = store[widgetNames.CHART_WIDGET].data;
@@ -31,16 +33,16 @@
 
   const renderChart = () => {
     if (!chartElement) return;
-    // const serializedChartData = convertApiResponseToChartData(chartData.slice(1,4));
-    const { min, max } = getMinMaxData(mockData1);
+    // if chart exist destroy previous
+    if (chart) chart.destroy();
+
+    const { min, max } = getMinMaxData(chartData);
     const options = getCandleChartOptions({
       min,
       max,
       chartConfigs: { height: 300, width: 600 },
     });
-    console.log(">>> options", options);
-    console.log(">>>formalizedChartData", mockData1);
-    chart = new uPlot(options, mockData1, chartElement);
+    chart = new uPlot(options, chartData, chartElement);
   };
 
   afterUpdate(async () => {
@@ -50,11 +52,11 @@
 
 <div class="chart-widget">
   <h3>Chart widget</h3>
+  <ChartWidgetDateButtons bind:period />
   <ChartWidgetWrapper {chartDataLoading} {chartDataError}>
-    <div>Period buttons</div>
-    <div>Chart type buttons</div>
-
-    <div bind:this={chartElement} class="chart-widget" id={"chart-widget"} />
+    {#key period}
+      <div bind:this={chartElement} class="chart-widget" id="chart-widget" />
+    {/key}
   </ChartWidgetWrapper>
 </div>
 

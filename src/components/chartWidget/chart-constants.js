@@ -30,3 +30,15 @@ export const xAxesValues = [
   [3600, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
   [60, "{HH}:{mm}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
 ];
+
+export const defaultChartOptions = {
+  symbol: "BTC",
+  limit: "100",
+};
+
+export const periodOptions = [
+  { id: Symbol("day"), name: "Day", interval: "1h" },
+  { id: Symbol("week"), name: "Week", interval: "6h" },
+  { id: Symbol("month"), name: "Month", interval: "1d" },
+  { id: Symbol("year"), name: "Year", interval: "1w" },
+];
