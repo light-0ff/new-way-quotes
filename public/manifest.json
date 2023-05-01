@@ -1,15 +1,15 @@
 {
-    "background_color": "#000",
-    "theme_color": "#f7931a",
-    "name": "Minimal Crypto Price Widget",
-    "short_name": "Svelte Crypto",
-    "display": "fullscreen",
-    "start_url": "/",
-    "icons": [
-      {
-        "src": "app-240x240.png",
-        "sizes": "240x240",
-        "type": "image/png"
-      }
-    ]
-  }
+  "background_color": "#000",
+  "theme_color": "#f7931a",
+  "name": "Minimal Crypto Price Widget",
+  "short_name": "Svelte Crypto",
+  "display": "fullscreen",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "app-240x240.png",
+      "sizes": "240x240",
+      "type": "image/png"
+    }
+  ]
+}

@@ -200,14 +200,6 @@ function candlestickPlugin({
         Math.round(bodyWidth - bodyOutline * 2),
         Math.round(bodyHeight - bodyOutline * 2)
       );
-
-      // volume rect
-      u.ctx.fillRect(
-        Math.round(bodyX),
-        Math.round(volAsY),
-        Math.round(bodyWidth),
-        Math.round(vol0AsY - volAsY)
-      );
     }
 
     u.ctx.translate(-offset, -offset);
